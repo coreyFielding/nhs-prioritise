@@ -1,0 +1,17 @@
+sudo: required
+
+language: node_js
+
+node_js:
+  - 4.2
+
+services:
+  - docker
+
+script:
+  - docker-compose up --build
+
+after_success:
+  - docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+  - docker tag nhs-prioritise $DOCKER_USER/nhs-prioritise:latest
+  - docker push $DOCKER_USER/nhs-prioritise:latest

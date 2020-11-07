@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  ####################
+  # node container
+  ####################
+  server:
+    container_name: prioritise_node
+    image: prioritise_node:latest
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./server:/srv/app/prioritise_node
+
+  ####################
+  # client container
+  ####################
+  client:
+    container_name: client
+    image: prioritise-client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client/src:/srv/app/prioritise-client/src
+    networks:
+      - prioritise_net
+
+networks:
+  prioritise_net:
+    driver: bridge

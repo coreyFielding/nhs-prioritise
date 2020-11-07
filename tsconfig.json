@@ -11,5 +11,5 @@
       "target": "es5",
       "types": ["node"]
     },
-    "include": ["client/components/index.tsx"]
+    "include": ["client/src/index.tsx"]
 }

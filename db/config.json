@@ -1,0 +1,17 @@
+{
+    "development": {
+      "username": "admin",
+      "password": "secret",
+      "database": "prioritise-pg",
+      "host": "postgres",
+      "port": "5432",
+      "dialect": "postgres",
+      "pool": {
+        "max": 15,
+        "min": 5,
+        "idle": 20000,
+        "evict": 15000,
+        "acquire": 3000
+      }
+    }
+}

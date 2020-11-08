@@ -1,4 +1,4 @@
-version: "3"
+version: "2.1"
 
 services:
   ####################
@@ -31,6 +31,64 @@ services:
     networks:
       - prioritise_net
 
+  ####################
+  # pgadmin container
+  ####################
+  pgadmin:
+    image: dpage/pgadmin4:4.18
+    container_name: pgadmin
+    # depends_on:
+    #   postgres:
+    #     condition: service_healthy
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@linuxhint.com
+      PGADMIN_DEFAULT_PASSWORD: secret
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    networks:
+      - pgadmin_net
+
+  ####################
+  # postgres container
+  ####################
+  postgres:
+    restart: always
+    image: postgres:12.2
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    networks:
+      - pgadmin_net
+    # healthcheck:
+    #   test:
+    #     [
+    #       "CMD",
+    #       "pg_isready",
+    #       "-q",
+    #       "-d",
+    #       "${POSTGRES_DB}",
+    #       "-U",
+    #       "${POSTGRES_USER}",
+    #     ]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 10
+
+volumes:
+  pgadmin-data:
+
 networks:
   prioritise_net:
+    driver: bridge
+  pgadmin_net:
     driver: bridge
